@@ -185,13 +185,6 @@ function clearSelection() {
   renderEpisodes();
 }
 
-function selectAll() {
-  feedState.episodes.forEach((ep) => {
-    ep.skip = false;
-  });
-  renderEpisodes();
-}
-
 function selectFiltered() {
   const visible = getVisibleEpisodes();
   visible.forEach((ep) => {
@@ -260,6 +253,25 @@ async function uploadFeed() {
   }
   uploadResult.innerHTML = `Feed uploaded: <a href="${data.url}" target="_blank">${data.url}</a>`;
   navigator.clipboard?.writeText(data.url).catch(() => {});
+}
+
+function downloadFeed() {
+  const xml = feedState.currentXml;
+  if (!xml) {
+    uploadResult.textContent = 'Generate the feed before downloading.';
+    return;
+  }
+
+  const blob = new Blob([xml], { type: 'application/rss+xml' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'podcast-feed.xml';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  uploadResult.textContent = 'Feed downloaded.';
 }
 
 function renderEpisodePreview(ep) {
@@ -354,9 +366,9 @@ document.getElementById('reverseBtn').addEventListener('click', reverseEpisodes)
 document.getElementById('filterBtn').addEventListener('click', applyFilter);
 document.getElementById('resetFilterBtn').addEventListener('click', resetFilter);
 document.getElementById('clearSelectionBtn').addEventListener('click', clearSelection);
-document.getElementById('selectAllBtn').addEventListener('click', selectAll);
 document.getElementById('selectFilteredBtn').addEventListener('click', selectFiltered);
 document.getElementById('generateBtn').addEventListener('click', generatePreview);
 document.getElementById('uploadBtn').addEventListener('click', uploadFeed);
+document.getElementById('downloadBtn').addEventListener('click', downloadFeed);
 backToEditBtn?.addEventListener('click', returnToEditor);
 backToEditFooterBtn?.addEventListener('click', returnToEditor);

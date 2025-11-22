@@ -50,15 +50,25 @@
         <button id="clearSelectionBtn">Clear selection</button>
       </div>
       <div id="episodes" class="episodes"></div>
+
+      <div class="input-row end">
+        <button id="generateBtn">Generate review</button>
+      </div>
     </section>
 
     <section class="card" id="preview" hidden>
-      <h2>3. Preview & generate</h2>
-      <button id="generateBtn">Generate preview</button>
-      <div id="previewContent"></div>
+      <div class="section-heading">
+        <div>
+          <h2>3. Review feed</h2>
+          <p class="muted">See the feed as it will appear</p>
+        </div>
+        <button id="backToEditBtn" class="secondary">Back to edit</button>
+      </div>
+      <div id="previewContent" class="review-feed"></div>
       <pre id="xmlOutput" class="xml-output" hidden></pre>
-      <div class="input-row" id="uploadRow" hidden>
+      <div class="input-row review-actions">
         <button id="uploadBtn">Upload to S3</button>
+        <button id="backToEditFooterBtn" class="secondary">Back to edit</button>
         <span id="uploadResult"></span>
       </div>
     </section>

@@ -107,7 +107,8 @@ async function loadFeedFromFile() {
 }
 
 function populateEditor(data) {
-  feedState.originalEpisodes = data.episodes.map((ep, index) => ({ ...ep, id: index }));
+  const incomingEpisodes = Array.isArray(data.episodes) ? data.episodes : [];
+  feedState.originalEpisodes = incomingEpisodes.map((ep, index) => ({ ...ep, id: index }));
   feedState.episodes = [...feedState.originalEpisodes];
   feedState.image = data.image || null;
   feedState.title = data.title || '';
@@ -134,6 +135,15 @@ function getVisibleEpisodes() {
 function renderEpisodes() {
   const list = getVisibleEpisodes();
   episodesContainer.innerHTML = '';
+
+  if (!list?.length) {
+    const empty = document.createElement('p');
+    empty.className = 'muted';
+    empty.textContent = 'No episodes found in this feed.';
+    episodesContainer.appendChild(empty);
+    return;
+  }
+
   list.forEach((ep) => {
     const card = document.createElement('div');
     card.className = 'episode-card';

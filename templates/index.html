@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Podcast Feed Editor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Podcast Feed Editor</h1>
+
+    <section class="card">
+      <h2>1. Load a feed</h2>
+      <div class="input-row">
+        <label for="feedUrl">Feed URL</label>
+        <input id="feedUrl" type="url" placeholder="https://example.com/feed.xml">
+        <button id="loadUrlBtn">Load feed</button>
+      </div>
+      <div class="input-row">
+        <label for="feedFile">or upload file</label>
+        <input id="feedFile" type="file" accept="application/rss+xml,application/xml,text/xml">
+        <button id="loadFileBtn">Upload file</button>
+      </div>
+      <p class="hint">Only one of URL or file is needed.</p>
+      <div id="loadStatus" class="status"></div>
+    </section>
+
+    <section class="card" id="editor" hidden>
+      <h2>2. Edit feed</h2>
+      <div class="input-row">
+        <label for="podcastTitle">Podcast title</label>
+        <input id="podcastTitle" type="text">
+      </div>
+      <div class="input-row">
+        <label for="podcastDescription">Podcast description</label>
+        <textarea id="podcastDescription" rows="3"></textarea>
+      </div>
+      <div class="input-row">
+        <label for="filterTerm">Filter episodes by name</label>
+        <input id="filterTerm" type="text" placeholder="search term">
+        <button id="filterBtn">Apply filter</button>
+        <button id="resetFilterBtn">Reset</button>
+      </div>
+      <div class="input-row">
+        <button id="selectAllBtn">Select all</button>
+        <button id="selectFilteredBtn">Select visible</button>
+        <button id="reverseBtn">Reverse ordering</button>
+        <button id="clearSelectionBtn">Clear selection</button>
+      </div>
+      <div id="episodes" class="episodes"></div>
+    </section>
+
+    <section class="card" id="preview" hidden>
+      <h2>3. Preview & generate</h2>
+      <button id="generateBtn">Generate preview</button>
+      <div id="previewContent"></div>
+      <pre id="xmlOutput" class="xml-output" hidden></pre>
+      <div class="input-row" id="uploadRow" hidden>
+        <button id="uploadBtn">Upload to S3</button>
+        <span id="uploadResult"></span>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

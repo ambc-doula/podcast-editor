@@ -16,6 +16,10 @@ const previewSection = document.getElementById('preview');
 const episodesContainer = document.getElementById('episodes');
 const podcastTitle = document.getElementById('podcastTitle');
 const podcastDescription = document.getElementById('podcastDescription');
+const feedImagePreview = document.getElementById('feedImagePreview');
+const episodeImageSelect = document.getElementById('episodeImageSelect');
+const useEpisodeImageBtn = document.getElementById('useEpisodeImageBtn');
+const clearFeedImageBtn = document.getElementById('clearFeedImageBtn');
 const filterTerm = document.getElementById('filterTerm');
 const previewContent = document.getElementById('previewContent');
 const xmlOutput = document.getElementById('xmlOutput');
@@ -123,6 +127,72 @@ function populateEditor(data) {
   xmlOutput.hidden = true;
   previewContent.innerHTML = '';
   uploadResult.textContent = '';
+  renderFeedImageOptions();
+  updateFeedImagePreview();
+}
+
+function renderFeedImageOptions() {
+  if (!episodeImageSelect) return;
+  const seen = new Set();
+  const options = feedState.originalEpisodes
+    .filter((ep) => ep.image)
+    .filter((ep) => {
+      if (seen.has(ep.image)) return false;
+      seen.add(ep.image);
+      return true;
+    })
+    .map((ep) => ({ title: ep.title || 'Episode artwork', url: ep.image }));
+
+  episodeImageSelect.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = options.length ? 'Keep current feed image' : 'No episode artwork available';
+  episodeImageSelect.appendChild(placeholder);
+
+  options.forEach((opt) => {
+    const option = document.createElement('option');
+    option.value = opt.url;
+    option.textContent = `${opt.title} artwork`;
+    episodeImageSelect.appendChild(option);
+  });
+
+  episodeImageSelect.disabled = options.length === 0;
+  useEpisodeImageBtn.disabled = options.length === 0;
+
+  if (feedState.image && options.some((opt) => opt.url === feedState.image)) {
+    episodeImageSelect.value = feedState.image;
+  }
+}
+
+function updateFeedImagePreview() {
+  if (!feedImagePreview) return;
+  feedImagePreview.innerHTML = '';
+
+  if (!feedState.image) {
+    const placeholder = document.createElement('span');
+    placeholder.textContent = 'No feed image selected';
+    feedImagePreview.appendChild(placeholder);
+    return;
+  }
+
+  const img = document.createElement('img');
+  img.src = feedState.image;
+  img.alt = 'Feed artwork';
+  feedImagePreview.appendChild(img);
+}
+
+function applySelectedFeedImage() {
+  if (!episodeImageSelect?.value) return;
+  feedState.image = episodeImageSelect.value;
+  updateFeedImagePreview();
+}
+
+function clearFeedImage() {
+  feedState.image = null;
+  if (episodeImageSelect) {
+    episodeImageSelect.value = '';
+  }
+  updateFeedImagePreview();
 }
 
 function getVisibleEpisodes() {
@@ -372,3 +442,5 @@ document.getElementById('uploadBtn').addEventListener('click', uploadFeed);
 document.getElementById('downloadBtn').addEventListener('click', downloadFeed);
 backToEditBtn?.addEventListener('click', returnToEditor);
 backToEditFooterBtn?.addEventListener('click', returnToEditor);
+useEpisodeImageBtn?.addEventListener('click', applySelectedFeedImage);
+clearFeedImageBtn?.addEventListener('click', clearFeedImage);

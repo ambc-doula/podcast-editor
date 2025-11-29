@@ -37,6 +37,18 @@
         <label for="podcastDescription">Podcast description</label>
         <textarea id="podcastDescription" rows="3"></textarea>
       </div>
+      <div class="input-row feed-image-row">
+        <div class="feed-image-preview" id="feedImagePreview"></div>
+        <div class="feed-image-actions">
+          <label for="episodeImageSelect">Feed image</label>
+          <select id="episodeImageSelect"></select>
+          <div class="feed-image-buttons">
+            <button id="useEpisodeImageBtn" type="button">Use selected artwork</button>
+            <button id="clearFeedImageBtn" type="button" class="secondary">Clear image</button>
+          </div>
+          <p class="hint">Pick an episode artwork to use as the podcast image.</p>
+        </div>
+      </div>
       <div class="input-row">
         <label for="filterTerm">Filter episodes by name</label>
         <input id="filterTerm" type="text" placeholder="search term">
